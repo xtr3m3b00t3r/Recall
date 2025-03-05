@@ -1,0 +1,3 @@
+# Recall v25.03 Requirements
+# Basic dependencies - the scripts use only standard library packages
+python>=3.6
