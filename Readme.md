@@ -14,7 +14,7 @@ Recall helps you document your daily accomplishments and automatically compile t
 ## Features
 
 - Markdown-based note-taking system
-- Hierarchical folder organization (Year/Quarter/Week/Day)
+- Hierarchical folder organisation (Year/Quarter/Week/Day)
 - Automated setup of daily notes with consistent templates
 - Weekly summary generation from your daily entries
 - Plain text storage format for maximum future compatibility
@@ -46,17 +46,22 @@ This automatically creates daily notes for the current week.
 
 **Throughout the week**:
 - Fill in your daily note for each day (located in `Recall/YEAR/QUARTER/WEEKXX/daily/`)
-- Focus on capturing accomplishments, decisions, and learnings
+- Focus on capturing accomplishments, decisions, and what you have learned. 
 
 **Friday afternoon**:
+
 ```bash
 python recall_compile.py
 ```
-This collects your daily notes and generates a draft weekly summary for you to review and finalize.
+This collects your daily notes and generates a draft weekly summary for you to review and finalise.
+
+# Example Documents
+
+For examples of how the weekly, and daily documents look. Please refer to the supplied files, day_example 2025-03-03.md, and week_example week10-summary.md.
 
 ## Customization
 
-You can easily customize the templates in the `Recall/Templates/` directory:
+You can easily customise the templates in the `Recall/Templates/` directory:
 - `daily-template.md` - Template for daily notes
 - `weekly-template.md` - Template for weekly summaries
 
