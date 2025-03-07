@@ -136,7 +136,7 @@ def setup_week(target_date=None):
     
     # Create week directory with format Week##-MonDD-MonDD
     week_num = start_date.isocalendar()[1]  # ISO week number
-    week_dir_name = f"Week{week_num:02d}-{start_date.strftime('%b%d')}-{end_date.strftime('%b%d')}"
+    week_dir_name = f"Week{week_num:02d}-{start_date.strftime('%m-%d')}-{end_date.strftime('%m-%d')}"
     week_dir = os.path.join(quarter_dir, week_dir_name)
     daily_dir = os.path.join(week_dir, "daily")
     
