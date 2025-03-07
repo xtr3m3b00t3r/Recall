@@ -38,7 +38,7 @@ def setup_templates():
     
     # Only create templates if they don't exist
     if not os.path.exists(daily_template_path):
-        with open(daily_template_path, "w") as f:
+        with open(daily_template_path, "w", encoding="utf-8") as f:
             f.write("""# Daily Notes: [DATE]
 
 ## 🏗️ Projects Worked On
@@ -76,7 +76,7 @@ def setup_templates():
         print(f"Created daily template: {daily_template_path}")
     
     if not os.path.exists(weekly_template_path):
-        with open(weekly_template_path, "w") as f:
+        with open(weekly_template_path, "w", encoding="utf-8") as f:
             f.write("""# Weekly Release Notes: Week of [START_DATE] to [END_DATE]
 
 ## 🌟 Key Accomplishments
@@ -146,38 +146,42 @@ def setup_week(target_date=None):
     ensure_directory_exists(daily_dir)
     
     # Create daily note files for each day of the week
-    with open(os.path.join(TEMPLATES_DIR, "daily-template.md"), "r") as template_file:
-        daily_template = template_file.read()
-    
-    # Create weekly summary template
-    with open(os.path.join(TEMPLATES_DIR, "weekly-template.md"), "r") as template_file:
-        weekly_template = template_file.read()
-    
-    # Replace placeholders in weekly template
-    weekly_template = weekly_template.replace(
-        "[START_DATE]", start_date.strftime("%B %d, %Y")
-    ).replace(
-        "[END_DATE]", end_date.strftime("%B %d, %Y")
-    )
-    
-    # Write weekly summary template
-    weekly_summary_path = os.path.join(week_dir, f"week{week_num:02d}-summary.md")
-    if not os.path.exists(weekly_summary_path):
-        with open(weekly_summary_path, "w") as f:
-            f.write(weekly_template)
-        print(f"Created weekly summary template: {weekly_summary_path}")
-    
-    # Create daily notes for each workday (Monday to Friday)
-    for i in range(5):  # 0=Monday, 4=Friday
-        day_date = start_date + timedelta(days=i)
-        day_file = os.path.join(daily_dir, f"{day_date.strftime('%Y-%m-%d')}.md")
+    try:
+        with open(os.path.join(TEMPLATES_DIR, "daily-template.md"), "r", encoding="utf-8") as template_file:
+            daily_template = template_file.read()
         
-        # Only create if it doesn't exist
-        if not os.path.exists(day_file):
-            day_content = daily_template.replace("[DATE]", day_date.strftime("%Y-%m-%d"))
-            with open(day_file, "w") as f:
-                f.write(day_content)
-            print(f"Created daily note: {day_file}")
+        # Create weekly summary template
+        with open(os.path.join(TEMPLATES_DIR, "weekly-template.md"), "r", encoding="utf-8") as template_file:
+            weekly_template = template_file.read()
+        
+        # Replace placeholders in weekly template
+        weekly_template = weekly_template.replace(
+            "[START_DATE]", start_date.strftime("%B %d, %Y")
+        ).replace(
+            "[END_DATE]", end_date.strftime("%B %d, %Y")
+        )
+        
+        # Write weekly summary template
+        weekly_summary_path = os.path.join(week_dir, f"week{week_num:02d}-summary.md")
+        if not os.path.exists(weekly_summary_path):
+            with open(weekly_summary_path, "w", encoding="utf-8") as f:
+                f.write(weekly_template)
+            print(f"Created weekly summary template: {weekly_summary_path}")
+        
+        # Create daily notes for each workday (Monday to Friday)
+        for i in range(5):  # 0=Monday, 4=Friday
+            day_date = start_date + timedelta(days=i)
+            day_file = os.path.join(daily_dir, f"{day_date.strftime('%Y-%m-%d')}.md")
+            
+            # Only create if it doesn't exist
+            if not os.path.exists(day_file):
+                day_content = daily_template.replace("[DATE]", day_date.strftime("%Y-%m-%d"))
+                with open(day_file, "w", encoding="utf-8") as f:
+                    f.write(day_content)
+                print(f"Created daily note: {day_file}")
+    except Exception as e:
+        print(f"Error setting up week: {e}")
+        sys.exit(1)
 
 def main():
     """Main entry point"""

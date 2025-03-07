@@ -1,11 +1,12 @@
 import os
 import re
+import sys
 from datetime import datetime, timedelta
 import glob
 import argparse
 
 # Base directory for all release notes
-BASE_DIR = "Work-Release-Notes"
+BASE_DIR = "Recall"
 
 def get_week_dates(target_date=None):
     """Get the start and end dates for the week containing the target date"""
@@ -31,7 +32,12 @@ def find_week_directory(target_date=None):
     start_date, _ = get_week_dates(target_date)
     
     year_dir = os.path.join(BASE_DIR, str(start_date.year))
+    if not os.path.exists(year_dir):
+        raise FileNotFoundError(f"Year directory not found: {year_dir}. Please run recall_setup.py first.")
+        
     quarter_dir = os.path.join(year_dir, get_quarter(start_date))
+    if not os.path.exists(quarter_dir):
+        raise FileNotFoundError(f"Quarter directory not found: {quarter_dir}. Please run recall_setup.py first.")
     
     # Get week number
     week_num = start_date.isocalendar()[1]  # ISO week number
@@ -43,7 +49,7 @@ def find_week_directory(target_date=None):
     if matching_dirs:
         return matching_dirs[0]
     else:
-        raise FileNotFoundError(f"Could not find directory for week {week_num} of {start_date.year}")
+        raise FileNotFoundError(f"Could not find directory for week {week_num} of {start_date.year}. Please run recall_setup.py first to set up the current week.")
 
 def extract_section_content(content, section_name):
     """Extract content from a specific markdown section"""
@@ -75,7 +81,7 @@ def compile_weekly_summary(week_dir):
     weekly_summary_path = weekly_files[0]
     
     # Read current weekly summary
-    with open(weekly_summary_path, "r") as f:
+    with open(weekly_summary_path, "r", encoding="utf-8") as f:
         weekly_content = f.read()
     
     # Collect daily note sections
@@ -88,7 +94,7 @@ def compile_weekly_summary(week_dir):
     all_collaborations = []
     
     for daily_file in daily_files:
-        with open(daily_file, "r") as f:
+        with open(daily_file, "r", encoding="utf-8") as f:
             daily_content = f.read()
         
         # Extract date from filename
@@ -171,8 +177,8 @@ def compile_weekly_summary(week_dir):
         )
     
     # Save compiled summary with _draft suffix
-    draft_path = weekly_summary_path.replace(".md", "_draft.md")
-    with open(draft_path, "w") as f:
+    draft_path = os.path.splitext(weekly_summary_path)[0] + "_draft.md"
+    with open(draft_path, "w", encoding="utf-8") as f:
         f.write(weekly_content)
     
     print(f"Draft weekly summary compiled to: {draft_path}")
